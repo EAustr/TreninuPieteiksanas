@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import '../../css/buttons.css'
 </script>
@@ -24,12 +24,6 @@ import '../../css/buttons.css'
                         class="button"
                     >
                         Log in
-                    </Link>
-                    <Link
-                        :href="route('register')"
-                        class="button"
-                    >
-                        Register
                     </Link>
                 </template>
             </nav>
