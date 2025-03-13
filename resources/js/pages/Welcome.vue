@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import '../../css/buttons.css'
+import { usePage } from '@inertiajs/vue3';
+import { SharedData } from '@/types';
+
+const page = usePage<SharedData>();
+
 </script>
 
 <template>
@@ -12,7 +17,7 @@ import '../../css/buttons.css'
         <header class="not-has-[nav]:hidden mb-6 w-full max-w-[335px] text-sm lg:max-w-4xl">
             <nav class="flex items-center justify-center gap-4">
                 <Link
-                    v-if="$page.props.auth.user"
+                    v-if="page.props.auth.user"
                     :href="route('dashboard')"
                     class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
                 >
