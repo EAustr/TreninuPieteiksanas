@@ -1,0 +1,307 @@
+<template>
+  <div class="training-calendar">
+    <div class="flex justify-between items-center mb-6">
+      <Heading>Training Calendar</Heading>
+      <button v-if="isTrainer" @click="showCreateModal = true" class="btn-primary">
+        Create Training Session
+      </button>
+    </div>
+
+    <div class="calendar-grid bg-white rounded-lg shadow">
+      <!-- Calendar Header -->
+      <div class="grid grid-cols-7 gap-px bg-gray-200 text-center">
+        <div v-for="day in weekDays" :key="day" class="bg-gray-50 py-2 font-semibold">
+          {{ day }}
+        </div>
+      </div>
+
+      <!-- Calendar Days -->
+      <div class="grid grid-cols-7 gap-px">
+        <div
+          v-for="date in calendarDays"
+          :key="date.date"
+          class="min-h-[120px] p-2 bg-white"
+          :class="{ 'bg-gray-50': !isCurrentMonth(date) }"
+        >
+          <div class="flex justify-between items-center mb-2">
+            <span :class="{ 'text-gray-400': !isCurrentMonth(date) }">
+              {{ date.dayOfMonth }}
+            </span>
+          </div>
+          
+          <!-- Training Sessions for the day -->
+          <div class="space-y-1">
+            <div
+              v-for="session in getSessionsForDate(date)"
+              :key="session.id"
+              class="p-1 rounded text-sm cursor-pointer"
+              :class="getSessionStatusClass(session)"
+              @click="openSessionDetails(session)"
+            >
+              {{ formatTime(session.start_time) }}
+              <span class="text-xs">
+                ({{ session.attendanceRecords.length }}/{{ session.max_participants }})
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create/Edit Training Modal -->
+    <Modal v-if="showCreateModal" @close="showCreateModal = false">
+      <template #title>
+        {{ editingSession ? 'Edit Training Session' : 'Create Training Session' }}
+      </template>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Date</label>
+          <input
+            type="date"
+            v-model="form.date"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          >
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Start Time</label>
+          <input
+            type="time"
+            v-model="form.start_time"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          >
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700">End Time</label>
+          <input
+            type="time"
+            v-model="form.end_time"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          >
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Max Participants</label>
+          <input
+            type="number"
+            v-model="form.max_participants"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          >
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Notes</label>
+          <textarea
+            v-model="form.notes"
+            rows="3"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          ></textarea>
+        </div>
+      </div>
+
+      <template #footer>
+        <button
+          type="button"
+          class="btn-secondary mr-2"
+          @click="showCreateModal = false"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn-primary"
+          @click="saveTrainingSession"
+        >
+          {{ editingSession ? 'Update' : 'Create' }}
+        </button>
+      </template>
+    </Modal>
+
+    <!-- Session Details Modal -->
+    <Modal v-if="selectedSession" @close="selectedSession = null">
+      <template #title>Training Session Details</template>
+      
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-medium">Date & Time</h3>
+          <p>{{ formatDateTime(selectedSession.start_time) }} - {{ formatTime(selectedSession.end_time) }}</p>
+        </div>
+        
+        <div>
+          <h3 class="font-medium">Participants ({{ selectedSession.attendanceRecords.length }}/{{ selectedSession.max_participants }})</h3>
+          <ul class="mt-2 space-y-2">
+            <li v-for="record in selectedSession.attendanceRecords" :key="record.id">
+              {{ record.user.name }} - {{ record.status }}
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="selectedSession.notes">
+          <h3 class="font-medium">Notes</h3>
+          <p class="text-gray-600">{{ selectedSession.notes }}</p>
+        </div>
+
+        <div v-if="!isTrainer" class="mt-4">
+          <button
+            v-if="!isRegistered(selectedSession)"
+            class="btn-primary"
+            :disabled="isSessionFull(selectedSession)"
+            @click="registerForSession"
+          >
+            Register
+          </button>
+          <button
+            v-else
+            class="btn-danger"
+            @click="cancelRegistration"
+          >
+            Cancel Registration
+          </button>
+        </div>
+      </div>
+    </Modal>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useAuth } from '@/composables/useAuth'
+import axios from 'axios'
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isWithinInterval } from 'date-fns'
+import Modal from '@/components/ui/Modal.vue'
+import Heading from '@/components/Heading.vue'
+
+const { user } = useAuth()
+const isTrainer = computed(() => user.value?.role === 'trainer')
+
+const showCreateModal = ref(false)
+const selectedSession = ref(null)
+const editingSession = ref(null)
+const trainingSessions = ref([])
+
+const form = ref({
+  date: '',
+  start_time: '',
+  end_time: '',
+  max_participants: 12,
+  notes: ''
+})
+
+const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const currentDate = ref(new Date())
+
+// Calendar computations
+const calendarDays = computed(() => {
+  const start = startOfMonth(currentDate.value)
+  const end = endOfMonth(currentDate.value)
+  return eachDayOfInterval({ start, end })
+})
+
+// Methods
+const fetchTrainingSessions = async () => {
+  try {
+    const response = await axios.get('/api/training-sessions')
+    trainingSessions.value = response.data
+  } catch (error) {
+    console.error('Error fetching training sessions:', error)
+  }
+}
+
+const saveTrainingSession = async () => {
+  try {
+    if (editingSession.value) {
+      await axios.put(`/api/training-sessions/${editingSession.value.id}`, form.value)
+    } else {
+      await axios.post('/api/training-sessions', form.value)
+    }
+    await fetchTrainingSessions()
+    showCreateModal.value = false
+    resetForm()
+  } catch (error) {
+    console.error('Error saving training session:', error)
+  }
+}
+
+const registerForSession = async () => {
+  try {
+    await axios.post(`/api/training-sessions/${selectedSession.value.id}/register`)
+    await fetchTrainingSessions()
+    selectedSession.value = null
+  } catch (error) {
+    console.error('Error registering for session:', error)
+  }
+}
+
+const cancelRegistration = async () => {
+  try {
+    await axios.delete(`/api/training-sessions/${selectedSession.value.id}/register`)
+    await fetchTrainingSessions()
+    selectedSession.value = null
+  } catch (error) {
+    console.error('Error canceling registration:', error)
+  }
+}
+
+const getSessionsForDate = (date) => {
+  return trainingSessions.value.filter(session => {
+    const sessionDate = new Date(session.start_time)
+    return sessionDate.getDate() === date.getDate() &&
+           sessionDate.getMonth() === date.getMonth() &&
+           sessionDate.getFullYear() === date.getFullYear()
+  })
+}
+
+const getSessionStatusClass = (session) => {
+  if (session.attendanceRecords.length >= session.max_participants) {
+    return 'bg-red-100 text-red-800'
+  }
+  return 'bg-green-100 text-green-800'
+}
+
+const isRegistered = (session) => {
+  return session.attendanceRecords.some(record => record.user_id === user.value?.id)
+}
+
+const isSessionFull = (session) => {
+  return session.attendanceRecords.length >= session.max_participants
+}
+
+const formatTime = (time) => {
+  return format(new Date(time), 'HH:mm')
+}
+
+const formatDateTime = (datetime) => {
+  return format(new Date(datetime), 'MMM d, yyyy HH:mm')
+}
+
+const resetForm = () => {
+  form.value = {
+    date: '',
+    start_time: '',
+    end_time: '',
+    max_participants: 12,
+    notes: ''
+  }
+  editingSession.value = null
+}
+
+onMounted(() => {
+  fetchTrainingSessions()
+})
+</script>
+
+<style scoped>
+.btn-primary {
+  @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300;
+}
+
+.btn-danger {
+  @apply bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700;
+}
+</style> 
