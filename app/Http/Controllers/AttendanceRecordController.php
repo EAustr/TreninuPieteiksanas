@@ -19,7 +19,7 @@ class AttendanceRecordController extends Controller
         $this->authorize('update', $attendanceRecord);
 
         $validated = $request->validate([
-            'status' => ['required', 'string', 'in:present,absent,late'],
+            'status' => ['required', 'string', 'in:present,absent,late,registered'],
         ]);
 
         $attendanceRecord->update([

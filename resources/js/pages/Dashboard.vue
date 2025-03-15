@@ -100,7 +100,10 @@ const formatDateTime = (datetime: string) => {
 };
 
 const isRegistered = (session: TrainingSession) => {
-    return session.attendance_records.some((record: AttendanceRecord) => record.user_id === user.value?.id);
+    return session.attendance_records.some((record: AttendanceRecord) =>
+        record.user_id === user.value?.id &&
+        (record.status === 'registered' || record.status === 'present')
+    );
 };
 
 const isSessionFull = (session: any) => {
@@ -309,7 +312,7 @@ onMounted(() => {
             </div>
 
             <!-- Attendance Heatmap -->
-            <AttendanceHeatmap />
+            <AttendanceHeatmap v-if="canRegister" />
 
             <!-- Upcoming Sessions -->
             <div class="rounded-lg border bg-white p-6">
@@ -334,7 +337,7 @@ onMounted(() => {
                                     Delete
                                 </button>
                             </template>
-                            <button v-if="canRegister" @click="registerForSession(session.id)"
+                            <button v-if="canRegister && !isRegistered(session)" @click="registerForSession(session.id)"
                                 class="rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700"
                                 :disabled="isSessionFull(session)">
                                 Register

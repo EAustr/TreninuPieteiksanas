@@ -11,7 +11,7 @@ interface AttendanceRecord {
         id: number;
         name: string;
     };
-    status: 'present' | 'absent' | 'late';
+    status: 'present' | 'absent' | 'late' | 'registered';
     created_at: string;
 }
 
@@ -39,9 +39,25 @@ const fetchSessions = async () => {
     }
 };
 
-const updateAttendance = async (recordId: number, status: 'present' | 'absent' | 'late') => {
+const updateAttendance = async (recordId: number, status: 'present' | 'absent' | 'late' | 'registered') => {
     try {
-        await axios.put(`/api/attendance-records/${recordId}`, { status });
+        // Find the current record
+        const currentRecord = sessions.value
+            .flatMap(session => session.attendance_records)
+            .find(record => record.id === recordId);
+
+        let newStatus = status;
+
+        // Toggle between present and registered when clicking Present button
+        if (status === 'present') {
+            if (currentRecord?.status === 'present') {
+                newStatus = 'registered';
+            } else if (currentRecord?.status === 'registered') {
+                newStatus = 'present';
+            }
+        }
+
+        await axios.put(`/api/attendance-records/${recordId}`, { status: newStatus });
         await fetchSessions();
     } catch (error) {
         console.error('Error updating attendance:', error);
@@ -91,7 +107,8 @@ onMounted(() => {
                                         <span :class="{
                                             'text-green-600': record.status === 'present',
                                             'text-red-600': record.status === 'absent',
-                                            'text-yellow-600': record.status === 'late'
+                                            'text-yellow-600': record.status === 'late',
+                                            'text-blue-600': record.status === 'registered'
                                         }">
                                             {{ record.status }}
                                         </span>
@@ -101,7 +118,8 @@ onMounted(() => {
                                             <Button variant="default" size="sm"
                                                 :class="{ 'opacity-50': record.status === 'present' }"
                                                 @click="updateAttendance(record.id, 'present')">
-                                                Present
+                                                {{ record.status === 'present' ? 'Mark Registered' : (record.status ===
+                                                    'registered' ? 'Mark Present' : 'Present') }}
                                             </Button>
                                             <Button variant="destructive" size="sm"
                                                 :class="{ 'opacity-50': record.status === 'absent' }"
