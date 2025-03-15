@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TrainingSessionController;
 use App\Http\Controllers\AttendanceRecordController;
+use App\Http\Controllers\TrainingAnalyticsController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +18,7 @@ use App\Http\Controllers\AttendanceRecordController;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['web', 'auth:sanctum', 'verified'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -27,8 +29,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/training-sessions/{trainingSession}', [TrainingSessionController::class, 'update']);
     Route::delete('/training-sessions/{trainingSession}', [TrainingSessionController::class, 'destroy']);
     Route::post('/training-sessions/{trainingSession}/register', [TrainingSessionController::class, 'register']);
-    Route::delete('/training-sessions/{trainingSession}/register', [TrainingSessionController::class, 'cancelRegistration']);
+    Route::delete('/training-sessions/{trainingSession}/register', [TrainingSessionController::class, 'unregister']);
+    Route::post('/training-sessions/{trainingSession}/sync-google-calendar', [TrainingSessionController::class, 'syncWithGoogleCalendar'])
+        ->name('training-sessions.sync-google-calendar');
 
     // Attendance Records
     Route::put('/attendance-records/{attendanceRecord}', [AttendanceRecordController::class, 'update']);
-}); 
+    Route::get('/training/attendance/heatmap', [AttendanceRecordController::class, 'heatmap']);
+
+    // User Management
+    Route::middleware(['role:admin'])->group(function () {
+        Route::post('/users', [UserController::class, 'store']);
+    });
+});

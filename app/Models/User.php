@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'google_calendar_token',
     ];
 
     /**
@@ -45,6 +46,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => 'string',
         ];
     }
 
@@ -56,5 +58,20 @@ class User extends Authenticatable
     public function attendanceRecords(): HasMany
     {
         return $this->hasMany(AttendanceRecord::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isTrainer(): bool
+    {
+        return $this->role === 'trainer';
+    }
+
+    public function isAthlete(): bool
+    {
+        return $this->role === 'athlete';
     }
 }

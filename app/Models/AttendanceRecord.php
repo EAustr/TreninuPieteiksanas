@@ -11,18 +11,22 @@ class AttendanceRecord extends Model
     use HasFactory;
 
     protected $fillable = [
-        'training_session_id',
         'user_id',
-        'status'
+        'training_session_id',
+        'status',
     ];
 
-    public function trainingSession(): BelongsTo
-    {
-        return $this->belongsTo(TrainingSession::class);
-    }
+    protected $casts = [
+        'status' => 'string',
+    ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-} 
+
+    public function trainingSession(): BelongsTo
+    {
+        return $this->belongsTo(TrainingSession::class);
+    }
+}

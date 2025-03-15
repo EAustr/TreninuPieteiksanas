@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('training_sessions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('trainer_id')->constrained('users')->onDelete('cascade');
             $table->dateTime('start_time');
             $table->dateTime('end_time');
-            $table->integer('max_participants');
-            $table->foreignId('trainer_id')->constrained('users');
+            $table->integer('max_participants')->default(12);
             $table->text('notes')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -30,4 +29,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('training_sessions');
     }
-}; 
+};

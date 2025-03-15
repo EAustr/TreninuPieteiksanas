@@ -16,4 +16,4 @@ class TrainingSessionPolicy
     {
         return $user->id === $trainingSession->trainer_id;
     }
-} 
+}

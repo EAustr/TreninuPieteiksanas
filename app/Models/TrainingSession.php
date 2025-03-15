@@ -16,22 +16,25 @@ class TrainingSession extends Model
         'start_time',
         'end_time',
         'max_participants',
+        'notes',
         'trainer_id',
-        'notes'
     ];
 
     protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
+        'max_participants' => 'integer',
     ];
+
+    protected $with = ['attendance_records.user'];
 
     public function trainer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'trainer_id');
     }
 
-    public function attendanceRecords(): HasMany
+    public function attendance_records(): HasMany
     {
         return $this->hasMany(AttendanceRecord::class);
     }
-} 
+}
