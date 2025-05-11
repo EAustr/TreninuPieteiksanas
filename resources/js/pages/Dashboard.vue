@@ -285,15 +285,29 @@ onMounted(() => {
                 <!-- Register User Card - Only visible to admin -->
                 <Link v-if="isAdmin" href="/register-user"
                     class="group relative overflow-hidden rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-lg">
-                <div class="flex items-center gap-4">
-                    <div class="rounded-full bg-green-100 p-3">
-                        <Users class="h-6 w-6 text-green-600" />
+                    <div class="flex items-center gap-4">
+                        <div class="rounded-full bg-green-100 p-3">
+                            <Users class="h-6 w-6 text-green-600" />
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Register User</h3>
+                            <p class="text-sm text-gray-600">Add a new user to the system</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="font-semibold">Register User</h3>
-                        <p class="text-sm text-gray-600">Add a new user to the system</p>
+                </Link>
+
+                <!-- User Management Card - Only visible to admin -->
+                <Link v-if="isAdmin" href="/users"
+                    class="group relative overflow-hidden rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-lg">
+                    <div class="flex items-center gap-4">
+                        <div class="rounded-full bg-blue-100 p-3">
+                            <Users class="h-6 w-6 text-blue-600" />
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">User Management</h3>
+                            <p class="text-sm text-gray-600">Manage all users in the system</p>
+                        </div>
                     </div>
-                </div>
                 </Link>
 
                 <!-- Attendance Card - Only visible to admin and trainer -->

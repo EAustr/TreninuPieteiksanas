@@ -16,6 +16,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('users/RegisterUser');
     })->middleware('role:admin')->name('register-user');
 
+    Route::get('users', function () {
+        return Inertia::render('users/UserManagement');
+    })->middleware('role:admin')->name('users.index');
+
+    Route::get('users/{user}/edit', function ($userId) {
+        return Inertia::render('users/EditUser', ['userId' => $userId]);
+    })->middleware('role:admin')->name('users.edit');
+
     Route::get('training-calendar', function () {
         return Inertia::render('training/TrainingCalendar');
     })->name('training.calendar');
