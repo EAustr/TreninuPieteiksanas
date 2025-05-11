@@ -30,8 +30,6 @@ Route::middleware(['web', 'auth:sanctum', 'verified'])->group(function () {
     Route::delete('/training-sessions/{trainingSession}', [TrainingSessionController::class, 'destroy']);
     Route::post('/training-sessions/{trainingSession}/register', [TrainingSessionController::class, 'register']);
     Route::delete('/training-sessions/{trainingSession}/register', [TrainingSessionController::class, 'unregister']);
-    Route::post('/training-sessions/{trainingSession}/sync-google-calendar', [TrainingSessionController::class, 'syncWithGoogleCalendar'])
-        ->name('training-sessions.sync-google-calendar');
 
     // Attendance Records
     Route::put('/attendance-records/{attendanceRecord}', [AttendanceRecordController::class, 'update']);

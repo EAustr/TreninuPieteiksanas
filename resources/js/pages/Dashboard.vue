@@ -327,12 +327,12 @@ onMounted(() => {
                             </p>
                         </div>
                         <div class="flex gap-2">
-                            <template v-if="isAdmin">
+                            <template v-if="isAdmin || isTrainer">
                                 <button @click="editSession(session)"
                                     class="rounded-md bg-blue-100 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-200">
                                     Edit
                                 </button>
-                                <button @click="deleteSession(session.id)"
+                                <button v-if="isAdmin" @click="deleteSession(session.id)"
                                     class="rounded-md bg-red-100 px-3 py-1.5 text-sm text-red-600 hover:bg-red-200">
                                     Delete
                                 </button>

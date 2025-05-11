@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => Hash::make('password'),
             'role' => 'athlete',
         ]);
 
@@ -36,7 +37,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'trainer@example.com',
             'password' => Hash::make('password'),
             'role' => 'trainer',
-            'email_verified_at' => now(),
         ]);
     }
 }
