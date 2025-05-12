@@ -39,32 +39,38 @@ const isSubmitting = ref(false);
 const { user } = useAuth();
 const isAdmin = computed(() => user.value?.role === 'admin');
 
+const roleOrder = ['admin', 'trainer', 'athlete'];
+
 const filteredUsers = computed(() => {
     let result = [...users.value];
-    
+
     // Apply search filter
     if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase();
-        result = result.filter(user => 
+        result = result.filter(user =>
             user.name.toLowerCase().includes(query) ||
             user.email.toLowerCase().includes(query) ||
             user.role.toLowerCase().includes(query)
         );
     }
-    
+
     // Apply sorting
     result.sort((a, b) => {
+        if (sortField.value === 'role') {
+            return sortDirection.value === 'asc'
+                ? roleOrder.indexOf(a.role) - roleOrder.indexOf(b.role)
+                : roleOrder.indexOf(b.role) - roleOrder.indexOf(a.role);
+        }
         const aValue = a[sortField.value as keyof User];
         const bValue = b[sortField.value as keyof User];
-        
         if (typeof aValue === 'string' && typeof bValue === 'string') {
-            return sortDirection.value === 'asc' 
+            return sortDirection.value === 'asc'
                 ? aValue.localeCompare(bValue)
                 : bValue.localeCompare(aValue);
         }
         return 0;
     });
-    
+
     return result;
 });
 
@@ -79,7 +85,7 @@ const fetchUsers = async () => {
 
 const deleteUser = async (userId: number) => {
     if (!confirm('Are you sure you want to delete this user?')) return;
-    
+
     try {
         isSubmitting.value = true;
         await axios.delete(`/api/users/${userId}`);
@@ -110,6 +116,7 @@ onMounted(() => {
 </script>
 
 <template>
+
     <Head title="User Management" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -126,12 +133,7 @@ onMounted(() => {
             <div class="mb-6 flex items-center gap-4">
                 <div class="relative flex-1">
                     <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                    <Input
-                        v-model="searchQuery"
-                        type="text"
-                        placeholder="Search users..."
-                        class="pl-10"
-                    />
+                    <Input v-model="searchQuery" type="text" placeholder="Search users..." class="pl-10" />
                 </div>
                 <Select v-model="sortField">
                     <SelectTrigger class="w-[180px]">
@@ -144,10 +146,7 @@ onMounted(() => {
                         <SelectItem value="created_at">Created At</SelectItem>
                     </SelectContent>
                 </Select>
-                <Button
-                    variant="outline"
-                    @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'"
-                >
+                <Button variant="outline" @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'">
                     {{ sortDirection === 'asc' ? '↑' : '↓' }}
                 </Button>
             </div>
@@ -180,20 +179,12 @@ onMounted(() => {
                             <TableCell>{{ new Date(user.created_at).toLocaleDateString() }}</TableCell>
                             <TableCell>
                                 <div class="flex items-center gap-2">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        @click="editUser(user.id)"
-                                        :disabled="isSubmitting"
-                                    >
+                                    <Button variant="ghost" size="icon" @click="editUser(user.id)"
+                                        :disabled="isSubmitting">
                                         <Edit class="h-4 w-4" />
                                     </Button>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        @click="deleteUser(user.id)"
-                                        :disabled="isSubmitting"
-                                    >
+                                    <Button variant="ghost" size="icon" @click="deleteUser(user.id)"
+                                        :disabled="isSubmitting">
                                         <Trash2 class="h-4 w-4 text-red-500" />
                                     </Button>
                                 </div>
@@ -204,4 +195,4 @@ onMounted(() => {
             </div>
         </div>
     </AppLayout>
-</template> 
+</template>
