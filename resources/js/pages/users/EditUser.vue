@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/composables/useAuth';
+import { computed } from 'vue';
 
 interface Props {
     userId: number;
@@ -33,7 +34,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const form = ref({
     name: '',
     email: '',
-    role: '',
+    role: 'athlete',
 });
 
 const errors = ref({
@@ -54,7 +55,7 @@ const fetchUser = async () => {
         form.value = {
             name: userData.name,
             email: userData.email,
-            role: userData.role,
+            role: String(userData.role),
         };
     } catch (error) {
         console.error('Error fetching user:', error);
@@ -93,6 +94,7 @@ onMounted(() => {
 </script>
 
 <template>
+
     <Head title="Edit User" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -104,42 +106,29 @@ onMounted(() => {
                     <!-- Name -->
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                        <Input
-                            id="name"
-                            v-model="form.name"
-                            type="text"
-                            :class="{ 'border-red-500': errors.name }"
-                            required
-                        />
+                        <Input id="name" v-model="form.name" type="text" :class="{ 'border-red-500': errors.name }"
+                            required />
                         <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
                     </div>
 
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <Input
-                            id="email"
-                            v-model="form.email"
-                            type="email"
-                            :class="{ 'border-red-500': errors.email }"
-                            required
-                        />
+                        <Input id="email" v-model="form.email" type="email" :class="{ 'border-red-500': errors.email }"
+                            required />
                         <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
                     </div>
 
                     <!-- Role -->
                     <div>
                         <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
-                        <Select v-model="form.role" :class="{ 'border-red-500': errors.role }" required>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select a role" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="admin">Admin</SelectItem>
-                                <SelectItem value="trainer">Trainer</SelectItem>
-                                <SelectItem value="athlete">Athlete</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <select id="role" v-model="form.role" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            :class="{ 'border-red-500': errors.role }">
+                            <option value="admin">Admin</option>
+                            <option value="trainer">Trainer</option>
+                            <option value="athlete">Athlete</option>
+                        </select>
                         <p v-if="errors.role" class="mt-1 text-sm text-red-600">{{ errors.role }}</p>
                     </div>
 
@@ -148,18 +137,11 @@ onMounted(() => {
 
                     <!-- Submit Button -->
                     <div class="flex justify-end gap-4">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            @click="router.visit('/users')"
-                            :disabled="isSubmitting"
-                        >
+                        <Button type="button" variant="outline" @click="router.visit('/users')"
+                            :disabled="isSubmitting">
                             Cancel
                         </Button>
-                        <Button
-                            type="submit"
-                            :disabled="isSubmitting"
-                        >
+                        <Button type="submit" :disabled="isSubmitting">
                             {{ isSubmitting ? 'Saving...' : 'Save Changes' }}
                         </Button>
                     </div>
@@ -167,4 +149,4 @@ onMounted(() => {
             </div>
         </div>
     </AppLayout>
-</template> 
+</template>

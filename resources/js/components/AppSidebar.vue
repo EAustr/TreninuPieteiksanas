@@ -28,6 +28,14 @@ const mainNavItems = computed<NavItem[]>(() => {
         },
     ];
 
+    if (isAdmin.value) {
+        items.push({
+            title: 'User Management',
+            href: '/users',
+            icon: Folder,
+        });
+    }
+
     if (isAdmin.value || isTrainer.value) {
         items.push({
             title: 'Attendance Tracker',

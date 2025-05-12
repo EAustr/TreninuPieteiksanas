@@ -135,20 +135,6 @@ onMounted(() => {
                     <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                     <Input v-model="searchQuery" type="text" placeholder="Search users..." class="pl-10" />
                 </div>
-                <Select v-model="sortField">
-                    <SelectTrigger class="w-[180px]">
-                        <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="name">Name</SelectItem>
-                        <SelectItem value="email">Email</SelectItem>
-                        <SelectItem value="role">Role</SelectItem>
-                        <SelectItem value="created_at">Created At</SelectItem>
-                    </SelectContent>
-                </Select>
-                <Button variant="outline" @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                </Button>
             </div>
 
             <!-- Users Table -->
