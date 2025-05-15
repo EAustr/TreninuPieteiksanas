@@ -6,8 +6,11 @@ use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProfileUpdateRequest extends FormRequest
-{
+//Provides a type hint for the user() method
+/** 
+ * @method \App\Models\User user()
+ */
+class ProfileUpdateRequest extends FormRequest {
     /**
      * Get the validation rules that apply to the request.
      *
