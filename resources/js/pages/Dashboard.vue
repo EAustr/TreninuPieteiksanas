@@ -6,7 +6,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
 import { Calendar, Users, Plus } from 'lucide-vue-next';
 import { useAuth } from '@/composables/useAuth';
-import axios from '@/utils/axios';
+import axios from '@/lib/axios';
 import { format } from 'date-fns';
 import Modal from '@/components/ui/Modal.vue';
 import AttendanceHeatmap from '@/components/training/AttendanceHeatmap.vue';

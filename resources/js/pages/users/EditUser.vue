@@ -3,10 +3,9 @@ import { ref, onMounted } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
-import axios from '@/utils/axios';
+import axios from '../../lib/axios';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/composables/useAuth';
 import { computed } from 'vue';
 

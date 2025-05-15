@@ -133,8 +133,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useAuth } from '@/composables/useAuth'
-import axios from '@/utils/axios'
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isWithinInterval, isSameMonth } from 'date-fns'
+import axios from '../../lib/axios'
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth } from 'date-fns'
 import Modal from '@/components/ui/Modal.vue'
 import Heading from '@/components/Heading.vue'
 import AppLayout from '@/layouts/AppLayout.vue'

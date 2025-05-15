@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
-import axios from '@/utils/axios';
+import axios from '../../lib/axios';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
