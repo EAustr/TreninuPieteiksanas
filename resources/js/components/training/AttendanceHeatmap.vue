@@ -59,7 +59,7 @@ onMounted(() => {
             </div>
             <div v-else class="flex gap-1">
                 <div v-for="(week, weekIndex) in weeks" :key="weekIndex" class="flex flex-col gap-1">
-                    <div v-for="(day, dayIndex) in week" :key="day.date" 
+                    <div v-for="(day) in week" :key="day.date" 
                          class="w-3 h-3 rounded-sm"
                          :class="{
                              'bg-green-500': day.attended,
