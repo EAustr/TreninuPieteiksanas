@@ -44,7 +44,6 @@ const errors = ref({
 });
 
 const isSubmitting = ref(false);
-const { user } = useAuth();
 
 const fetchUser = async () => {
     try {
