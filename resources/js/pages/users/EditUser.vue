@@ -45,7 +45,6 @@ const errors = ref({
 
 const isSubmitting = ref(false);
 const { user } = useAuth();
-const isAdmin = computed(() => user.value?.role === 'admin');
 
 const fetchUser = async () => {
     try {
