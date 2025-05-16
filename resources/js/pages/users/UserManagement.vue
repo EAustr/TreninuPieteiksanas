@@ -36,7 +36,6 @@ const sortDirection = ref('asc');
 const isSubmitting = ref(false);
 
 const { user } = useAuth();
-const isAdmin = computed(() => user.value?.role === 'admin');
 
 const roleOrder = ['admin', 'trainer', 'athlete'];
 
