@@ -34,7 +34,7 @@
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-        <link rel="icon" href="data:," /> <!-- Add this line --> fix for favicon issue 
+        <link rel="icon" href="data:," /> <!-- Add this line to fix for favicon issue --> 
 
         @routes
         @vite(['resources/js/app.ts'])
