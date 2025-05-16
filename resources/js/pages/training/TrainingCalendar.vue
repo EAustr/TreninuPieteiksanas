@@ -214,7 +214,7 @@ const saveTrainingSession = async () => {
     if (editingSession.value) {
       response = await axios.put(`/api/training-sessions/${editingSession.value.id}`, formattedData)
     } else {
-      response = await axios.post('/api/training-sessions', formattedData)
+      await axios.post('/api/training-sessions', formattedData)
     }
 
     await fetchTrainingSessions()
