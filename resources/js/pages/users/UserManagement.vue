@@ -35,7 +35,6 @@ const sortField = ref('name');
 const sortDirection = ref('asc');
 const isSubmitting = ref(false);
 
-const { user } = useAuth();
 
 const roleOrder = ['admin', 'trainer', 'athlete'];
 
