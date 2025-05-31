@@ -105,12 +105,12 @@
         </div>
 
         <div v-if="canRegister" class="mt-4 flex gap-2">
-          <button v-if="!isRegistered(selectedSession)" class="btn-primary" :disabled="isSessionFull(selectedSession)"
-            @click="registerForSession">
-            Register
+          <button v-if="!isRegistered(selectedSession)" class="btn-primary"
+            :disabled="isSessionFull(selectedSession) || isSessionInPast(selectedSession)" @click="registerForSession">
+            {{ isSessionInPast(selectedSession) ? 'Registration Closed' : 'Register' }}
           </button>
-          <button v-else class="btn-danger" @click="cancelRegistration">
-            Cancel Registration
+          <button v-else class="btn-danger" :disabled="isSessionInPast(selectedSession)" @click="cancelRegistration">
+            {{ isSessionInPast(selectedSession) ? 'Cannot Cancel Past Session' : 'Cancel Registration' }}
           </button>
         </div>
 
@@ -192,6 +192,10 @@ const isRegistered = (session: TrainingSession) => {
 
 const isSessionFull = (session: TrainingSession) => {
   return session.attendance_records.length >= session.max_participants
+}
+
+const isSessionInPast = (session: TrainingSession) => {
+  return new Date(session.start_time) < new Date()
 }
 
 const registerForSession = async () => {
