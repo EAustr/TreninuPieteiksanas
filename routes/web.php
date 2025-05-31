@@ -32,7 +32,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('training/Attendance');
     })->middleware('role:admin|trainer')
         ->name('training.attendance');
-    
+
+    Route::get('/training/calendar-view', function () {
+        return Inertia::render('training/CalendarView');
+    })->name('training.calendar-view');
 });
 
 Route::middleware(['web', 'auth', 'verified'])->group(function () {
