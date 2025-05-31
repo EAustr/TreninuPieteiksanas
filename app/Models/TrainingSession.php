@@ -18,6 +18,7 @@ class TrainingSession extends Model
         'max_participants',
         'notes',
         'trainer_id',
+        'category_id',
     ];
 
     protected $casts = [
@@ -26,11 +27,16 @@ class TrainingSession extends Model
         'max_participants' => 'integer',
     ];
 
-    protected $with = ['attendance_records.user'];
+    protected $with = ['attendance_records.user', 'category'];
 
     public function trainer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'trainer_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(TrainingCategory::class);
     }
 
     public function attendance_records(): HasMany

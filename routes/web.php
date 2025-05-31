@@ -32,6 +32,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('training/Attendance');
     })->middleware('role:admin|trainer')
         ->name('training.attendance');
+    
+});
+
+Route::middleware(['web', 'auth', 'verified'])->group(function () {
+    Route::get('/settings/attended-training', function () {
+        return Inertia::render('settings/AttendedTraining');
+    });
 });
 
 require __DIR__ . '/settings.php';

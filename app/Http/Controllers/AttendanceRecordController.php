@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\AttendanceRecord;
-use App\Models\TrainingSession;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceRecordController extends Controller
 {
@@ -51,5 +50,16 @@ class AttendanceRecordController extends Controller
             });
 
         return response()->json($records);
+    }
+
+    public function attendedTrainings(Request $request){
+        $user = $request->user();
+        $trainings = DB::table('attendance_records')
+            ->join('training_sessions', 'attendance_records.training_session_id', '=', 'training_sessions.id')
+            ->where('attendance_records.user_id', $user->id)
+            ->select('training_sessions.*')
+            ->get();
+
+        return response()->json($trainings);
     }
 }

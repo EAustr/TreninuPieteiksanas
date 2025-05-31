@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TrainingSessionController;
 use App\Http\Controllers\AttendanceRecordController;
-use App\Http\Controllers\TrainingAnalyticsController;
 use App\Http\Controllers\Api\UserController;
 
 /*
@@ -43,4 +42,7 @@ Route::middleware(['web', 'auth:sanctum', 'verified'])->group(function () {
         Route::put('/users/{user}', [UserController::class, 'update']);
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
     });
+
+    Route::get('/settings/attended-training', [AttendanceRecordController::class, 'attendedTrainings']);
+
 });
