@@ -21,12 +21,21 @@ interface AttendanceRecord {
     status: string;
 }
 
+interface TrainingCategory {
+    id: number;
+    name: string;
+    description: string;
+    color: string;
+}
+
 interface TrainingSession {
     id: number;
     start_time: string;
     end_time: string;
     max_participants: number;
     notes?: string;
+    category_id?: number;
+    category?: TrainingCategory;
     attendance_records: AttendanceRecord[];
 }
 
@@ -51,7 +60,8 @@ const form = ref({
     start_time: '',
     end_time: '',
     max_participants: 12,
-    notes: ''
+    notes: '',
+    category_id: null as number | null
 });
 
 const errors = ref({
@@ -73,6 +83,8 @@ const selectedStartMinute = ref('00');
 const selectedEndHour = ref('10');
 const selectedEndMinute = ref('00');
 
+const categories = ref<TrainingCategory[]>([]);
+
 const updateStartTime = () => {
     form.value.start_time = `${selectedStartHour.value}:${selectedStartMinute.value}`;
     showStartTimePicker.value = false;
@@ -86,10 +98,11 @@ const updateEndTime = () => {
 const fetchUpcomingSessions = async () => {
     try {
         const response = await axios.get('/api/training-sessions');
-        upcomingSessions.value = response.data
-            .filter((session: TrainingSession) => new Date(session.start_time) > new Date())
-            .sort((a: TrainingSession, b: TrainingSession) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
+        upcomingSessions.value = response.data.sessions
+            .filter((session: any) => new Date(session.start_time) > new Date())
+            .sort((a: any, b: any) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
             .slice(0, 5);
+        categories.value = response.data.categories;
     } catch (error) {
         console.error('Error fetching upcoming sessions:', error);
     }
@@ -143,7 +156,8 @@ const editSession = (session: TrainingSession) => {
         start_time: format(startDate, 'HH:mm'),
         end_time: format(endDate, 'HH:mm'),
         max_participants: session.max_participants,
-        notes: session.notes || ''
+        notes: session.notes || '',
+        category_id: session.category_id || null
     };
     showCreateModal.value = true;
 };
@@ -230,7 +244,8 @@ const resetForm = () => {
         start_time: '',
         end_time: '',
         max_participants: 12,
-        notes: ''
+        notes: '',
+        category_id: null
     };
 };
 
@@ -285,29 +300,29 @@ onMounted(() => {
                 <!-- Register User Card - Only visible to admin -->
                 <Link v-if="isAdmin" href="/register-user"
                     class="group relative overflow-hidden rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-lg">
-                    <div class="flex items-center gap-4">
-                        <div class="rounded-full bg-green-100 p-3">
-                            <Users class="h-6 w-6 text-green-600" />
-                        </div>
-                        <div>
-                            <h3 class="font-semibold">Register User</h3>
-                            <p class="text-sm text-gray-600">Add a new user to the system</p>
-                        </div>
+                <div class="flex items-center gap-4">
+                    <div class="rounded-full bg-green-100 p-3">
+                        <Users class="h-6 w-6 text-green-600" />
                     </div>
+                    <div>
+                        <h3 class="font-semibold">Register User</h3>
+                        <p class="text-sm text-gray-600">Add a new user to the system</p>
+                    </div>
+                </div>
                 </Link>
 
                 <!-- User Management Card - Only visible to admin -->
                 <Link v-if="isAdmin" href="/users"
                     class="group relative overflow-hidden rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-lg">
-                    <div class="flex items-center gap-4">
-                        <div class="rounded-full bg-blue-100 p-3">
-                            <Users class="h-6 w-6 text-blue-600" />
-                        </div>
-                        <div>
-                            <h3 class="font-semibold">User Management</h3>
-                            <p class="text-sm text-gray-600">Manage all users in the system</p>
-                        </div>
+                <div class="flex items-center gap-4">
+                    <div class="rounded-full bg-blue-100 p-3">
+                        <Users class="h-6 w-6 text-blue-600" />
                     </div>
+                    <div>
+                        <h3 class="font-semibold">User Management</h3>
+                        <p class="text-sm text-gray-600">Manage all users in the system</p>
+                    </div>
+                </div>
                 </Link>
 
                 <!-- Attendance Card - Only visible to admin and trainer -->
@@ -472,6 +487,17 @@ onMounted(() => {
                         :class="{ 'border-red-500': errors.max_participants }" min="1" max="50">
                     <p v-if="errors.max_participants" class="mt-1 text-sm text-red-600">{{ errors.max_participants }}
                     </p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Category</label>
+                    <select v-model="form.category_id"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option :value="null">Select a category</option>
+                        <option v-for="category in categories" :key="category.id" :value="category.id" class="py-2">
+                            {{ category.name }}
+                        </option>
+                    </select>
                 </div>
 
                 <div>

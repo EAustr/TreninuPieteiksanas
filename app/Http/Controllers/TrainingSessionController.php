@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TrainingSession;
 use App\Models\AttendanceRecord;
+use App\Models\TrainingCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -15,11 +16,16 @@ class TrainingSessionController extends Controller
 
     public function index()
     {
-        $trainingSessions = TrainingSession::with(['attendance_records.user'])
+        $trainingSessions = TrainingSession::with(['attendance_records.user', 'category'])
             ->orderBy('start_time')
             ->get();
 
-        return response()->json($trainingSessions);
+        $categories = TrainingCategory::all();
+
+        return response()->json([
+            'sessions' => $trainingSessions,
+            'categories' => $categories
+        ]);
     }
 
     public function store(Request $request)
@@ -29,6 +35,7 @@ class TrainingSessionController extends Controller
             'end_time' => 'required|date|after:start_time',
             'max_participants' => 'required|integer|min:1',
             'notes' => 'nullable|string',
+            'category_id' => 'nullable|exists:training_categories,id',
         ]);
 
         $trainingSession = TrainingSession::create([
@@ -37,9 +44,10 @@ class TrainingSessionController extends Controller
             'end_time' => $validated['end_time'],
             'max_participants' => $validated['max_participants'],
             'notes' => $validated['notes'] ?? null,
+            'category_id' => $validated['category_id'] ?? null,
         ]);
 
-        return response()->json($trainingSession->load('attendance_records.user'));
+        return response()->json($trainingSession->load(['attendance_records.user', 'category']));
     }
 
     public function update(Request $request, TrainingSession $trainingSession)
@@ -51,6 +59,7 @@ class TrainingSessionController extends Controller
             'end_time' => 'required|date|after:start_time',
             'max_participants' => 'required|integer|min:1',
             'notes' => 'nullable|string',
+            'category_id' => 'nullable|exists:training_categories,id',
         ]);
 
         $trainingSession->update([
@@ -58,9 +67,10 @@ class TrainingSessionController extends Controller
             'end_time' => $validated['end_time'],
             'max_participants' => $validated['max_participants'],
             'notes' => $validated['notes'] ?? null,
+            'category_id' => $validated['category_id'] ?? null,
         ]);
 
-        return response()->json($trainingSession->load('attendance_records.user'));
+        return response()->json($trainingSession->load(['attendance_records.user', 'category']));
     }
 
     public function destroy(TrainingSession $trainingSession)
@@ -84,7 +94,7 @@ class TrainingSessionController extends Controller
             'status' => 'registered'
         ]);
 
-        return response()->json($trainingSession->load('attendance_records.user'));
+        return response()->json($trainingSession->load(['attendance_records.user', 'category']));
     }
 
     public function unregister(TrainingSession $trainingSession)
@@ -97,6 +107,6 @@ class TrainingSessionController extends Controller
             $record->delete();
         }
 
-        return response()->json($trainingSession->load('attendance_records.user'));
+        return response()->json($trainingSession->load(['attendance_records.user', 'category']));
     }
 }

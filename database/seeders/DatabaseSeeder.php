@@ -38,5 +38,9 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'trainer',
         ]);
+
+        $this->call([
+            TrainingCategorySeeder::class,
+        ]);
     }
 }

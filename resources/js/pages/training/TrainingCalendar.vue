@@ -31,11 +31,15 @@
             <!-- Training Sessions for the day -->
             <div class="space-y-1">
               <div v-for="session in getSessionsForDate(date)" :key="session.id"
-                class="p-1 rounded text-sm cursor-pointer" :class="getSessionStatusClass(session)"
+                class="p-1 rounded text-sm cursor-pointer"
+                :class="[getSessionStatusClass(session), session.category ? `border-l-4 border-[${session.category.color}]` : '']"
                 @click="selectedSession = session">
                 {{ formatTime(session.start_time) }}
                 <span class="text-xs">
                   ({{ session.attendance_records?.length || 0 }}/{{ session.max_participants }})
+                </span>
+                <span v-if="session.category" class="text-xs ml-1">
+                  {{ session.category.name }}
                 </span>
               </div>
             </div>
@@ -74,6 +78,17 @@
           </div>
 
           <div>
+            <label class="block text-sm font-medium text-gray-700">Category</label>
+            <select v-model="form.category_id"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+              <option :value="null">Select a category</option>
+              <option v-for="category in categories" :key="category.id" :value="category.id" class="py-2">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+
+          <div>
             <label class="block text-sm font-medium text-gray-700">Notes</label>
             <textarea v-model="form.notes" rows="3"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
@@ -98,6 +113,15 @@
           <div>
             <h3 class="font-medium">Date & Time</h3>
             <p>{{ formatDateTime(selectedSession.start_time) }} - {{ formatTime(selectedSession.end_time) }}</p>
+          </div>
+
+          <div v-if="selectedSession.category">
+            <h3 class="font-medium">Category</h3>
+            <p class="flex items-center">
+              <span class="inline-block w-3 h-3 rounded-full mr-2"
+                :style="{ backgroundColor: selectedSession.category.color }"></span>
+              {{ selectedSession.category.name }}
+            </p>
           </div>
 
           <div>
@@ -150,12 +174,21 @@ interface AttendanceRecord {
   status: string;
 }
 
+interface TrainingCategory {
+  id: number;
+  name: string;
+  description: string;
+  color: string;
+}
+
 interface TrainingSession {
   id: number;
   start_time: string;
   end_time: string;
   max_participants: number;
   notes?: string;
+  category_id?: number;
+  category?: TrainingCategory;
   attendance_records: AttendanceRecord[];
 }
 
@@ -175,8 +208,11 @@ const form = ref({
   start_time: '',
   end_time: '',
   max_participants: 12,
-  notes: ''
+  notes: '',
+  category_id: null as number | null
 })
+
+const categories = ref<TrainingCategory[]>([])
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -195,7 +231,10 @@ const isCurrentMonth = (date: Date) => {
 const fetchTrainingSessions = async () => {
   try {
     const response = await axios.get('/api/training-sessions')
-    trainingSessions.value = response.data
+    console.log('API Response:', response.data) // Debug log
+    trainingSessions.value = response.data.sessions
+    categories.value = response.data.categories
+    console.log('Categories loaded:', categories.value) // Debug log
   } catch (error) {
     console.error('Error fetching training sessions:', error)
   }
@@ -209,6 +248,7 @@ const saveTrainingSession = async () => {
       end_time: `${form.value.date} ${form.value.end_time}`,
       date: undefined
     }
+    console.log('Saving training session with data:', formattedData) // Debug log
 
     if (editingSession.value) {
       await axios.put(`/api/training-sessions/${editingSession.value.id}`, formattedData)
@@ -288,7 +328,8 @@ const resetForm = () => {
     start_time: '',
     end_time: '',
     max_participants: 12,
-    notes: ''
+    notes: '',
+    category_id: null
   }
 }
 
