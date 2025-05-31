@@ -177,4 +177,39 @@ onMounted(() => {
 .fc-timegrid-now-indicator-arrow {
     @apply border-red-500;
 }
+
+/* Add these new styles for text wrapping */
+.fc-event-title {
+    @apply whitespace-normal break-words;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.fc-event-main {
+    @apply p-1;
+}
+
+.fc-daygrid-event {
+    @apply whitespace-normal;
+    min-height: 1.5em;
+}
+
+.fc-timegrid-event {
+    @apply whitespace-normal;
+    min-height: 1.5em;
+}
+
+.fc-event-time {
+    @apply whitespace-nowrap;
+}
+
+/* Ensure the event container can grow */
+.fc-daygrid-event-harness {
+    @apply min-h-[1.5em];
+}
+
+.fc-timegrid-event-harness {
+    @apply min-h-[1.5em];
+}
 </style>
