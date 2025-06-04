@@ -31,7 +31,7 @@ const fetchSessions = async () => {
     try {
         loading.value = true;
         const response = await axios.get('/api/training-sessions');
-        sessions.value = response.data;
+        sessions.value = response.data.sessions;
     } catch (error) {
         console.error('Error fetching sessions:', error);
     } finally {

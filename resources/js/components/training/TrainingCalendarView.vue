@@ -11,7 +11,6 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import axios from '@/lib/axios'
-import { useAuth } from '@/composables/useAuth'
 
 interface TrainingSession {
     id: number
@@ -28,7 +27,6 @@ interface TrainingSession {
     attendance_records: any[]
 }
 
-const { user } = useAuth()
 const calendar = ref()
 const events = ref<any[]>([])
 
