@@ -52,6 +52,19 @@ const submit = () => {
                     <InputError :message="form.errors.email" />
                 </div>
 
+                <div class="grid gap-2">
+                    <Input
+                        id="password"
+                        type="password"
+                        required
+                        :tabindex="2"
+                        autocomplete="current-password"
+                        v-model="form.password"
+                        placeholder="Password"
+                    />
+                    <InputError :message="form.errors.password" />
+                </div>
+
                 <div class="flex items-center justify-between" :tabindex="3">
                     <Label for="remember" class="flex items-center space-x-3">
                         <Checkbox id="remember" v-model:checked="form.remember" :tabindex="4" />
