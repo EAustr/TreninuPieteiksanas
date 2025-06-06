@@ -1,20 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import InputError from '@/components/InputError.vue';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
-import { type BreadcrumbItem } from '@/types';
+import { LoaderCircle } from 'lucide-vue-next';
+import { ref } from 'vue';
 import axios from '../../lib/axios';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-    },
-    {
-        title: 'Register User',
-        href: '/register-user',
-    },
-];
 
 const form = ref({
     name: '',
@@ -72,78 +65,53 @@ const registerUser = async () => {
 </script>
 
 <template>
+    <AppLayout>
 
-    <Head title="Register User" />
-
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="max-w-2xl mx-auto">
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-2xl font-semibold mb-6">Register New User</h2>
-
-                <form @submit.prevent="registerUser" class="space-y-6">
-                    <!-- Name -->
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                        <input id="name" v-model="form.name" type="text"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            :class="{ 'border-red-500': errors.name }" required>
-                        <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
+        <Head title="Register User" />
+        <div class="max-w-lg mx-auto mt-12 bg-white rounded-lg shadow p-8">
+            <h2 class="text-2xl font-bold mb-6 text-center">Register New User</h2>
+            <form @submit.prevent="registerUser" class="flex flex-col gap-6">
+                <div class="grid gap-6">
+                    <div class="grid gap-2">
+                        <Label for="name">Name</Label>
+                        <Input id="name" type="text" required autofocus autocomplete="name" v-model="form.name"
+                            placeholder="Full name" />
+                        <InputError :message="errors.name" />
                     </div>
-
-                    <!-- Email -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input id="email" v-model="form.email" type="email"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            :class="{ 'border-red-500': errors.email }" required>
-                        <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
+                    <div class="grid gap-2">
+                        <Label for="email">Email address</Label>
+                        <Input id="email" type="email" required autocomplete="email" v-model="form.email"
+                            placeholder="email@example.com" />
+                        <InputError :message="errors.email" />
                     </div>
-
-                    <!-- Password -->
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input id="password" v-model="form.password" type="password"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            :class="{ 'border-red-500': errors.password }" required>
-                        <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password }}</p>
+                    <div class="grid gap-2">
+                        <Label for="password">Password</Label>
+                        <Input id="password" type="password" required autocomplete="new-password"
+                            v-model="form.password" placeholder="Password" />
+                        <InputError :message="errors.password" />
                     </div>
-
-                    <!-- Password Confirmation -->
-                    <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm
-                            Password</label>
-                        <input id="password_confirmation" v-model="form.password_confirmation" type="password"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            :class="{ 'border-red-500': errors.password_confirmation }" required>
-                        <p v-if="errors.password_confirmation" class="mt-1 text-sm text-red-600">{{
-                            errors.password_confirmation }}</p>
+                    <div class="grid gap-2">
+                        <Label for="password_confirmation">Confirm password</Label>
+                        <Input id="password_confirmation" type="password" required autocomplete="new-password"
+                            v-model="form.password_confirmation" placeholder="Confirm password" />
+                        <InputError :message="errors.password_confirmation" />
                     </div>
-
-                    <!-- Role -->
-                    <div>
-                        <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                    <div class="grid gap-2">
+                        <Label for="role">Role</Label>
                         <select id="role" v-model="form.role"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            :class="{ 'border-red-500': errors.role }" required>
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             <option value="athlete">Athlete</option>
                             <option value="trainer">Trainer</option>
                         </select>
-                        <p v-if="errors.role" class="mt-1 text-sm text-red-600">{{ errors.role }}</p>
+                        <InputError :message="errors.role" />
                     </div>
-
-                    <!-- General Error -->
                     <p v-if="errors.general" class="text-sm text-red-600">{{ errors.general }}</p>
-
-                    <!-- Submit Button -->
-                    <div class="flex justify-end">
-                        <button type="submit"
-                            class="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
-                            :disabled="isSubmitting">
-                            {{ isSubmitting ? 'Registering...' : 'Register User' }}
-                        </button>
-                    </div>
-                </form>
-            </div>
+                    <Button type="submit" class="mt-2 w-full" :disabled="isSubmitting">
+                        <LoaderCircle v-if="isSubmitting" class="h-4 w-4 animate-spin" />
+                        Register User
+                    </Button>
+                </div>
+            </form>
         </div>
     </AppLayout>
 </template>
