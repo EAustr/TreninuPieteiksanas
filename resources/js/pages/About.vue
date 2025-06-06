@@ -25,7 +25,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="js">
 import { onMounted } from 'vue';
 
 onMounted(() => {
