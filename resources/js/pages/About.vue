@@ -25,8 +25,15 @@
     </div>
 </template>
 
-<script setup lang="js">
+<script setup lang="ts">
+/// <reference types="google.maps" />
 import { onMounted } from 'vue';
+
+declare global{
+    interface Window {
+        initMap: () => (void);
+    }
+}
 
 onMounted(() => {
     const apiKey = 'AIzaSyDzukRfn_ZEemIGMI3LjSlrsGbmhMEK96s';
@@ -37,7 +44,7 @@ onMounted(() => {
         script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
         script.async = true;
         window.initMap = function () {
-            const map = new window.google.maps.Map(document.getElementById('map'), {
+            const map = new window.google.maps.Map(document.getElementById('map')!, {
                 center: { lat: 56.921167, lng: 24.001545 },
                 zoom: 17,
             });
