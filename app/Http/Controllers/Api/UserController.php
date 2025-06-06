@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\Rule;
+use Closure;
 
 class UserController extends Controller
 {
@@ -24,38 +25,38 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-                'role' => ['required', 'string', Rule::in(['admin', 'trainer', 'athlete'])],
-            ]);
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                function (string $attribute, mixed $value, Closure $fail) {
+                    if (! preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $value)) {
+                        $fail('The {{attribute}} field must be a valid email address (e.g., user@domain.com).');
+                    }
+                },
+                'max:255',
+                'unique:users',
+            ],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'string', Rule::in(['admin', 'trainer', 'athlete'])],
+        ]);
 
-            $user = User::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-                'role' => $validated['role'],
-            ]);
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
+        ]);
 
-            return response()->json($user, 201);
-        } catch (\Exception $e) {
-            Log::error('User registration failed: ' . $e->getMessage());
-            return response()->json([
-                'message' => 'Failed to register user',
-                'errors' => [
-                    'general' => [$e->getMessage()]
-                ]
-            ], 500);
-        }
+        return response()->json($user, 201);
     }
 
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:55'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'string', 'email:rfc', 'max:255', Rule::unique('users')->ignore($user->id)],
             'role' => ['required', 'string', Rule::in(['admin', 'trainer', 'athlete'])],
         ]);
 
