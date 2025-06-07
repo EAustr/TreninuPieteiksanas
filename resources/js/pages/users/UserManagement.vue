@@ -7,7 +7,7 @@ import axios from '../../lib/axios';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Edit, Trash2, Plus } from 'lucide-vue-next';
+import { Search, Edit, Trash2, Plus, Calendar, CalendarRange } from 'lucide-vue-next';
 import { useAuth } from '@/composables/useAuth';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -34,7 +34,10 @@ const searchQuery = ref('');
 const sortField = ref('name');
 const sortDirection = ref('asc');
 const isSubmitting = ref(false);
-
+const startDate = ref('');
+const endDate = ref('');
+const singleDate = ref('');
+const isDateRange = ref(false);
 
 const roleOrder = ['admin', 'trainer', 'athlete'];
 
@@ -49,6 +52,26 @@ const filteredUsers = computed(() => {
             user.email.toLowerCase().includes(query) ||
             user.role.toLowerCase().includes(query)
         );
+    }
+
+    // Apply date filtering
+    if (isDateRange.value) {
+        // Date range filtering
+        if (startDate.value) {
+            result = result.filter(user => new Date(user.created_at) >= new Date(startDate.value));
+        }
+        if (endDate.value) {
+            result = result.filter(user => new Date(user.created_at) <= new Date(endDate.value));
+        }
+    } else {
+        // Single date filtering
+        if (singleDate.value) {
+            const selectedDate = new Date(singleDate.value);
+            result = result.filter(user => {
+                const userDate = new Date(user.created_at);
+                return userDate.toDateString() === selectedDate.toDateString();
+            });
+        }
     }
 
     // Apply sorting
@@ -127,10 +150,36 @@ onMounted(() => {
             </div>
 
             <!-- Search and Filter Section -->
-            <div class="mb-6 flex items-center gap-4">
-                <div class="relative flex-1">
+            <div class="mb-6 flex flex-wrap items-center gap-4">
+                <div class="relative flex-1 min-w-[200px]">
                     <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                     <Input v-model="searchQuery" type="text" placeholder="Search users..." class="pl-10" />
+                </div>
+                <div class="flex items-center gap-2">
+                    <Button variant="outline" size="sm" @click="isDateRange = !isDateRange"
+                        class="flex items-center gap-2">
+                        <CalendarRange v-if="isDateRange" class="h-4 w-4" />
+                        <Calendar v-else class="h-4 w-4" />
+                        {{ isDateRange ? 'Date Range' : 'Single Date' }}
+                    </Button>
+
+                    <template v-if="isDateRange">
+                        <div class="relative">
+                            <Calendar class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                            <Input v-model="startDate" type="date" class="pl-10" placeholder="Start date" />
+                        </div>
+                        <span class="text-gray-500">to</span>
+                        <div class="relative">
+                            <Calendar class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                            <Input v-model="endDate" type="date" class="pl-10" placeholder="End date" />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="relative">
+                            <Calendar class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                            <Input v-model="singleDate" type="date" class="pl-10" placeholder="Select date" />
+                        </div>
+                    </template>
                 </div>
             </div>
 
