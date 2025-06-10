@@ -20,3 +20,24 @@
   - **Treneri**, kurš vadīs konkrēto treniņu
 - Treniņu plānošana ierobežota līdz **30 dienām uz priekšu**, lai nodrošinātu strukturētu grafiku.
 - Lomu bāzēta piekļuves kontrole – tikai autorizēti lietotāji var veidot un rediģēt treniņus.
+
+## Sistēmas palaišanas vadlīnijas
+- git clone <repo-url>
+- cd <project-folder>
+- composer install
+- npm install 
+- php artisan migrate
+- composer run dev
+
+## Sistēmas prasības (Lietas kurām jābūt ieinstelētām lai sistēmu varētu palaist uz datora)
+- PHP 8.1 vai jaunāks
+- Composer 
+- Node.js un npm 
+- Teksta redaktors(VSCode, PHPStorm, u.c.)
+- (Papildus) TablePlus datubāzes pārlūkošanai
+- (Papildus) Git versiju kontrole
+
+
+## Testēšana
+- php artisan test
+Komanda palaidīs visus automatīskos testus kuri ir izveidoti
