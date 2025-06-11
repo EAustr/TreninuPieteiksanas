@@ -75,9 +75,6 @@ const errors = ref({
 const showStartTimePicker = ref(false);
 const showEndTimePicker = ref(false);
 
-const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
-const minutes = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, '0'));
-
 const selectedStartHour = ref('09');
 const selectedStartMinute = ref('00');
 const selectedEndHour = ref('10');
@@ -85,15 +82,6 @@ const selectedEndMinute = ref('00');
 
 const categories = ref<TrainingCategory[]>([]);
 
-const updateStartTime = () => {
-    form.value.start_time = `${selectedStartHour.value}:${selectedStartMinute.value}`;
-    showStartTimePicker.value = false;
-};
-
-const updateEndTime = () => {
-    form.value.end_time = `${selectedEndHour.value}:${selectedEndMinute.value}`;
-    showEndTimePicker.value = false;
-};
 
 const fetchUpcomingSessions = async () => {
     try {

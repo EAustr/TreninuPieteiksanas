@@ -88,7 +88,7 @@ const calendarOptions = {
     moreLinkClassNames: 'text-primary hover:text-primary/80',
     buttonClassNames: 'bg-card text-foreground hover:bg-accent hover:text-accent-foreground',
     todayClassNames: 'bg-accent/50',
-    eventClassNames: 'text-white dark:text-white',
+    eventClassNames: 'dark:text-white',
     // Custom CSS classes for dark mode
     classNames: {
         'fc-theme-standard': 'dark:bg-card dark:text-foreground',
@@ -115,9 +115,9 @@ const calendarOptions = {
         'fc-timegrid-slot-lane': 'dark:border-border',
         'fc-timegrid-now-indicator-line': 'dark:border-destructive',
         'fc-timegrid-now-indicator-arrow': 'dark:border-destructive',
-        'fc-event': 'text-white dark:text-white',
-        'fc-event-title': 'text-white dark:text-white',
-        'fc-event-time': 'text-white/90 dark:text-white/90',
+        'fc-event': 'dark:text-white',
+        'fc-event-title': 'dark:text-white',
+        'fc-event-time': 'dark:text-white/90',
     },
 };
 
@@ -134,7 +134,6 @@ const fetchTrainingSessions = async () => {
             end: session.end_time,
             backgroundColor: session.category?.color || '#3B82F6',
             borderColor: session.category?.color || '#3B82F6',
-            textColor: '#ffffff',
             extendedProps: {
                 participants: session.attendance_records?.length || 0,
                 maxParticipants: session.max_participants,
@@ -177,7 +176,7 @@ onMounted(() => {
     --fc-button-active-border-color: hsl(var(--accent));
     --fc-event-bg-color: hsl(var(--primary));
     --fc-event-border-color: hsl(var(--primary));
-    --fc-event-text-color: #ffffff;
+    --fc-event-text-color: hsl(var(--foreground));
     --fc-today-bg-color: hsl(var(--accent) / 0.2);
     --fc-neutral-bg-color: hsl(var(--card));
     --fc-list-event-hover-bg-color: hsl(var(--accent) / 0.1);
@@ -185,19 +184,19 @@ onMounted(() => {
 }
 
 :deep(.fc .fc-event) {
-    @apply border-0 text-white;
+    @apply border-0;
 }
 
 :deep(.fc .fc-event-title) {
-    @apply font-medium text-white;
+    @apply font-medium text-foreground;
 }
 
 :deep(.fc .fc-event-time) {
-    @apply text-white/90;
+    @apply text-muted-foreground;
 }
 
 :deep(.fc .fc-event-description) {
-    @apply text-white/90;
+    @apply text-muted-foreground;
 }
 
 /* Calendar dark mode styles */
@@ -212,7 +211,7 @@ onMounted(() => {
     --fc-button-active-border-color: hsl(var(--border));
     --fc-event-bg-color: hsl(var(--primary));
     --fc-event-border-color: hsl(var(--primary));
-    --fc-event-text-color: #ffffff;
+    --fc-event-text-color: hsl(var(--foreground));
     --fc-today-bg-color: hsl(var(--accent) / 0.5);
     --fc-neutral-bg-color: hsl(var(--card));
     --fc-list-event-hover-bg-color: hsl(var(--accent) / 0.5);
@@ -323,7 +322,19 @@ onMounted(() => {
 
 /* Ensure event text is visible in dark mode */
 .dark .fc-event {
-    color: hsl(var(--primary-foreground));
+    color: hsl(var(--foreground));
+}
+
+.dark .fc-event-title {
+    color: hsl(var(--foreground));
+}
+
+.dark .fc-event-time {
+    color: hsl(var(--foreground)) !important;
+}
+
+.dark .fc-event-description {
+    color: hsl(var(--foreground));
 }
 
 /* Ensure today's date is visible in dark mode */
