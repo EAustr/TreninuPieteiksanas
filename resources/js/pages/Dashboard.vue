@@ -271,70 +271,70 @@ onMounted(() => {
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <!-- Training Calendar Card -->
                 <Link href="/training-calendar"
-                    class="group relative overflow-hidden rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-lg">
+                    class="group relative overflow-hidden rounded-lg border bg-card p-6 shadow transition-shadow hover:shadow-lg">
                 <div class="flex items-center gap-4">
-                    <div class="rounded-full bg-blue-100 p-3">
-                        <Calendar class="h-6 w-6 text-blue-600" />
+                    <div class="rounded-full bg-blue-100 dark:bg-blue-900/30 p-3">
+                        <Calendar class="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
                         <h3 class="font-semibold">Training Calendar</h3>
-                        <p class="text-sm text-gray-600">View and manage training sessions</p>
+                        <p class="text-sm text-muted-foreground">View and manage training sessions</p>
                     </div>
                 </div>
                 </Link>
 
                 <!-- Create Session Card - Only visible to admin and trainer -->
                 <button v-if="canCreateSession" @click="showCreateModal = true"
-                    class="group relative overflow-hidden rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-lg text-left">
+                    class="group relative overflow-hidden rounded-lg border bg-card p-6 shadow transition-shadow hover:shadow-lg text-left">
                     <div class="flex items-center gap-4">
-                        <div class="rounded-full bg-blue-100 p-3">
-                            <Plus class="h-6 w-6 text-blue-600" />
+                        <div class="rounded-full bg-blue-100 dark:bg-blue-900/30 p-3">
+                            <Plus class="h-6 w-6 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
                             <h3 class="font-semibold">Create Session</h3>
-                            <p class="text-sm text-gray-600">Schedule a new training session</p>
+                            <p class="text-sm text-muted-foreground">Schedule a new training session</p>
                         </div>
                     </div>
                 </button>
 
                 <!-- Register User Card - Only visible to admin -->
                 <Link v-if="isAdmin" href="/register-user"
-                    class="group relative overflow-hidden rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-lg">
+                    class="group relative overflow-hidden rounded-lg border bg-card p-6 shadow transition-shadow hover:shadow-lg">
                 <div class="flex items-center gap-4">
-                    <div class="rounded-full bg-green-100 p-3">
-                        <Users class="h-6 w-6 text-green-600" />
+                    <div class="rounded-full bg-green-100 dark:bg-green-900/30 p-3">
+                        <Users class="h-6 w-6 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
                         <h3 class="font-semibold">Register User</h3>
-                        <p class="text-sm text-gray-600">Add a new user to the system</p>
+                        <p class="text-sm text-muted-foreground">Add a new user to the system</p>
                     </div>
                 </div>
                 </Link>
 
                 <!-- User Management Card - Only visible to admin -->
                 <Link v-if="isAdmin" href="/users"
-                    class="group relative overflow-hidden rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-lg">
+                    class="group relative overflow-hidden rounded-lg border bg-card p-6 shadow transition-shadow hover:shadow-lg">
                 <div class="flex items-center gap-4">
-                    <div class="rounded-full bg-blue-100 p-3">
-                        <Users class="h-6 w-6 text-blue-600" />
+                    <div class="rounded-full bg-blue-100 dark:bg-blue-900/30 p-3">
+                        <Users class="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
                         <h3 class="font-semibold">User Management</h3>
-                        <p class="text-sm text-gray-600">Manage all users in the system</p>
+                        <p class="text-sm text-muted-foreground">Manage all users in the system</p>
                     </div>
                 </div>
                 </Link>
 
                 <!-- Attendance Card - Only visible to admin and trainer -->
                 <Link v-if="isAdmin || isTrainer" href="/training/attendance"
-                    class="group relative overflow-hidden rounded-lg border bg-white p-6 shadow transition-shadow hover:shadow-lg">
+                    class="group relative overflow-hidden rounded-lg border bg-card p-6 shadow transition-shadow hover:shadow-lg">
                 <div class="flex items-center gap-4">
-                    <div class="rounded-full bg-purple-100 p-3">
-                        <Users class="h-6 w-6 text-purple-600" />
+                    <div class="rounded-full bg-purple-100 dark:bg-purple-900/30 p-3">
+                        <Users class="h-6 w-6 text-purple-600 dark:text-purple-400" />
                     </div>
                     <div>
                         <h3 class="font-semibold">Attendance Tracker</h3>
-                        <p class="text-sm text-gray-600">Manage training attendance</p>
+                        <p class="text-sm text-muted-foreground">Manage training attendance</p>
                     </div>
                 </div>
                 </Link>
@@ -344,14 +344,14 @@ onMounted(() => {
             <AttendanceHeatmap v-if="canRegister" />
 
             <!-- Upcoming Sessions -->
-            <div class="rounded-lg border bg-white p-6">
+            <div class="rounded-lg border bg-card p-6">
                 <h3 class="mb-4 text-lg font-semibold">Upcoming Sessions</h3>
                 <div v-if="upcomingSessions.length > 0" class="space-y-4">
                     <div v-for="session in upcomingSessions" :key="session.id"
-                        class="flex items-center justify-between rounded-lg border p-4">
+                        class="flex items-center justify-between rounded-lg border bg-card p-4">
                         <div>
                             <p class="font-medium">{{ formatDateTime(session.start_time) }}</p>
-                            <p class="text-sm text-gray-600">
+                            <p class="text-sm text-muted-foreground">
                                 {{ session.attendance_records.length }}/{{ session.max_participants }} participants
                             </p>
                         </div>
@@ -390,152 +390,79 @@ onMounted(() => {
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Date</label>
+                    <label class="block text-sm font-medium text-foreground">Date</label>
                     <input type="date" v-model="form.date" :min="new Date().toISOString().split('T')[0]"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        :class="{ 'border-red-500': errors.date }">
-                    <p v-if="errors.date" class="mt-1 text-sm text-red-600">{{ errors.date }}</p>
-                </div>
-
-                <div class="relative">
-                    <label class="block text-sm font-medium text-gray-700">Start Time</label>
-                    <button type="button" @click="showStartTimePicker = !showStartTimePicker"
-                        class="mt-1 w-full text-left px-3 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                        :class="{ 'border-red-500': errors.start_time }">
-                        {{ form.start_time || 'Select time' }}
-                    </button>
-                    <div v-if="showStartTimePicker"
-                        class="absolute z-50 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200">
-                        <div class="flex p-2 border-b">
-                            <div class="flex-1 pr-2 border-r">
-                                <div class="text-center text-sm text-gray-500 mb-1">Hour</div>
-                                <div class="h-40 overflow-y-auto scrollbar-thin">
-                                    <button v-for="hour in hours" :key="hour" @click="selectedStartHour = hour"
-                                        class="block w-full px-2 py-1 text-center hover:bg-blue-50 rounded"
-                                        :class="{ 'bg-blue-100 text-blue-600': selectedStartHour === hour }">
-                                        {{ hour }}
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="flex-1 pl-2">
-                                <div class="text-center text-sm text-gray-500 mb-1">Minute</div>
-                                <div class="h-40 overflow-y-auto scrollbar-thin">
-                                    <button v-for="minute in minutes" :key="minute"
-                                        @click="selectedStartMinute = minute"
-                                        class="block w-full px-2 py-1 text-center hover:bg-blue-50 rounded"
-                                        :class="{ 'bg-blue-100 text-blue-600': selectedStartMinute === minute }">
-                                        {{ minute }}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-2 border-t bg-gray-50">
-                            <button type="button" @click="updateStartTime"
-                                class="w-full px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                Set Time
-                            </button>
-                        </div>
-                    </div>
-                    <p v-if="errors.start_time" class="mt-1 text-sm text-red-600">{{ errors.start_time }}</p>
-                </div>
-
-                <div class="relative">
-                    <label class="block text-sm font-medium text-gray-700">End Time</label>
-                    <button type="button" @click="showEndTimePicker = !showEndTimePicker"
-                        class="mt-1 w-full text-left px-3 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                        :class="{ 'border-red-500': errors.end_time }">
-                        {{ form.end_time || 'Select time' }}
-                    </button>
-                    <div v-if="showEndTimePicker"
-                        class="absolute z-50 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200">
-                        <div class="flex p-2 border-b">
-                            <div class="flex-1 pr-2 border-r">
-                                <div class="text-center text-sm text-gray-500 mb-1">Hour</div>
-                                <div class="h-40 overflow-y-auto scrollbar-thin">
-                                    <button v-for="hour in hours" :key="hour" @click="selectedEndHour = hour"
-                                        class="block w-full px-2 py-1 text-center hover:bg-blue-50 rounded"
-                                        :class="{ 'bg-blue-100 text-blue-600': selectedEndHour === hour }">
-                                        {{ hour }}
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="flex-1 pl-2">
-                                <div class="text-center text-sm text-gray-500 mb-1">Minute</div>
-                                <div class="h-40 overflow-y-auto scrollbar-thin">
-                                    <button v-for="minute in minutes" :key="minute" @click="selectedEndMinute = minute"
-                                        class="block w-full px-2 py-1 text-center hover:bg-blue-50 rounded"
-                                        :class="{ 'bg-blue-100 text-blue-600': selectedEndMinute === minute }">
-                                        {{ minute }}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-2 border-t bg-gray-50">
-                            <button type="button" @click="updateEndTime"
-                                class="w-full px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                Set Time
-                            </button>
-                        </div>
-                    </div>
-                    <p v-if="errors.end_time" class="mt-1 text-sm text-red-600">{{ errors.end_time }}</p>
+                        class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                        :class="{ 'border-destructive': errors.date }">
+                    <p v-if="errors.date" class="mt-1 text-sm text-destructive">{{ errors.date }}</p>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Max Participants</label>
+                    <label class="block text-sm font-medium text-foreground">Start Time</label>
+                    <input type="time" v-model="form.start_time" @focus="showStartTimePicker = true"
+                        class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                        :class="{ 'border-destructive': errors.start_time }">
+                    <p v-if="errors.start_time" class="mt-1 text-sm text-destructive">{{ errors.start_time }}</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-foreground">End Time</label>
+                    <input type="time" v-model="form.end_time" @focus="showEndTimePicker = true"
+                        class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                        :class="{ 'border-destructive': errors.end_time }">
+                    <p v-if="errors.end_time" class="mt-1 text-sm text-destructive">{{ errors.end_time }}</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-foreground">Max Participants</label>
                     <input type="number" v-model="form.max_participants"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        :class="{ 'border-red-500': errors.max_participants }" min="1" max="50">
-                    <p v-if="errors.max_participants" class="mt-1 text-sm text-red-600">{{ errors.max_participants }}
-                    </p>
+                        class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                        :class="{ 'border-destructive': errors.max_participants }">
+                    <p v-if="errors.max_participants" class="mt-1 text-sm text-destructive">{{ errors.max_participants
+                        }}</p>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Category</label>
+                    <label class="block text-sm font-medium text-foreground">Category</label>
                     <select v-model="form.category_id"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                         <option :value="null">Select a category</option>
-                        <option v-for="category in categories" :key="category.id" :value="category.id" class="py-2">
+                        <option v-for="category in categories" :key="category.id" :value="category.id">
                             {{ category.name }}
                         </option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Notes</label>
+                    <label class="block text-sm font-medium text-foreground">Notes</label>
                     <textarea v-model="form.notes" rows="3"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        :class="{ 'border-red-500': errors.notes }"></textarea>
-                    <p v-if="errors.notes" class="mt-1 text-sm text-red-600">{{ errors.notes }}</p>
+                        class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"></textarea>
                 </div>
             </div>
 
-            <template #footer>
-                <button type="button"
-                    class="mr-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                    @click="showCreateModal = false">
+            <div class="mt-6 flex justify-end gap-4">
+                <button type="button" class="btn-secondary" @click="showCreateModal = false">
                     Cancel
                 </button>
-                <button type="button"
-                    class="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                    @click="createSession">
-                    Create
+                <button type="button" class="btn-primary" @click="createSession">
+                    {{ editingSession ? 'Update' : 'Create' }}
                 </button>
-            </template>
+            </div>
         </Modal>
     </AppLayout>
 </template>
 
 <style scoped>
 .btn-primary {
-    @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50;
+    @apply bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90;
 }
 
 .btn-secondary {
-    @apply bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300;
+    @apply bg-secondary text-secondary-foreground px-4 py-2 rounded-md hover:bg-secondary/80;
 }
 
 .btn-danger {
-    @apply bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700;
+    @apply bg-destructive text-destructive-foreground px-4 py-2 rounded-md hover:bg-destructive/90;
 }
 
 /* Force 24-hour format for time inputs */

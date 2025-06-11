@@ -4,7 +4,7 @@
         <div class="fixed inset-0 bg-black/50" @click="$emit('close')"></div>
 
         <!-- Modal Content -->
-        <div class="relative z-10 w-full max-w-lg rounded-lg bg-white p-6 shadow-xl">
+        <div class="relative z-10 w-full max-w-lg rounded-lg bg-card p-6 shadow-xl">
             <!-- Header -->
             <div class="mb-4">
                 <h3 class="text-lg font-medium" v-if="$slots.title">

@@ -136,13 +136,12 @@ onMounted(() => {
 </script>
 
 <template>
-
     <Head title="User Management" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="container mx-auto px-4 py-8">
             <div class="mb-6 flex items-center justify-between">
-                <h1 class="text-2xl font-bold">User Management</h1>
+                <h1 class="text-2xl font-bold text-foreground">User Management</h1>
                 <Button @click="router.visit('/register-user')" class="flex items-center gap-2">
                     <Plus class="h-4 w-4" />
                     Add User
@@ -152,7 +151,7 @@ onMounted(() => {
             <!-- Search and Filter Section -->
             <div class="mb-6 flex flex-wrap items-center gap-4">
                 <div class="relative flex-1 min-w-[200px]">
-                    <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input v-model="searchQuery" type="text" placeholder="Search users..." class="pl-10" />
                 </div>
                 <div class="flex items-center gap-2">
@@ -165,18 +164,18 @@ onMounted(() => {
 
                     <template v-if="isDateRange">
                         <div class="relative">
-                            <Calendar class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                            <Calendar class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input v-model="startDate" type="date" class="pl-10" placeholder="Start date" />
                         </div>
-                        <span class="text-gray-500">to</span>
+                        <span class="text-muted-foreground">to</span>
                         <div class="relative">
-                            <Calendar class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                            <Calendar class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input v-model="endDate" type="date" class="pl-10" placeholder="End date" />
                         </div>
                     </template>
                     <template v-else>
                         <div class="relative">
-                            <Calendar class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                            <Calendar class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input v-model="singleDate" type="date" class="pl-10" placeholder="Select date" />
                         </div>
                     </template>
@@ -184,40 +183,40 @@ onMounted(() => {
             </div>
 
             <!-- Users Table -->
-            <div class="rounded-lg border bg-white">
+            <div class="rounded-lg border bg-card">
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead class="cursor-pointer" @click="toggleSort('name')">
+                            <TableHead class="cursor-pointer text-foreground" @click="toggleSort('name')">
                                 Name {{ sortField === 'name' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
                             </TableHead>
-                            <TableHead class="cursor-pointer" @click="toggleSort('email')">
+                            <TableHead class="cursor-pointer text-foreground" @click="toggleSort('email')">
                                 Email {{ sortField === 'email' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
                             </TableHead>
-                            <TableHead class="cursor-pointer" @click="toggleSort('role')">
+                            <TableHead class="cursor-pointer text-foreground" @click="toggleSort('role')">
                                 Role {{ sortField === 'role' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
                             </TableHead>
-                            <TableHead class="cursor-pointer" @click="toggleSort('created_at')">
+                            <TableHead class="cursor-pointer text-foreground" @click="toggleSort('created_at')">
                                 Created At {{ sortField === 'created_at' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
                             </TableHead>
-                            <TableHead>Actions</TableHead>
+                            <TableHead class="text-foreground">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow v-for="user in filteredUsers" :key="user.id">
-                            <TableCell>{{ user.name }}</TableCell>
-                            <TableCell>{{ user.email }}</TableCell>
-                            <TableCell>{{ user.role }}</TableCell>
-                            <TableCell>{{ new Date(user.created_at).toLocaleDateString() }}</TableCell>
+                        <TableRow v-for="user in filteredUsers" :key="user.id" class="hover:bg-muted/50">
+                            <TableCell class="text-foreground">{{ user.name }}</TableCell>
+                            <TableCell class="text-foreground">{{ user.email }}</TableCell>
+                            <TableCell class="text-foreground">{{ user.role }}</TableCell>
+                            <TableCell class="text-foreground">{{ new Date(user.created_at).toLocaleDateString() }}</TableCell>
                             <TableCell>
                                 <div class="flex items-center gap-2">
                                     <Button variant="ghost" size="icon" @click="editUser(user.id)"
-                                        :disabled="isSubmitting">
+                                        :disabled="isSubmitting" class="hover:bg-muted">
                                         <Edit class="h-4 w-4" />
                                     </Button>
                                     <Button variant="ghost" size="icon" @click="deleteUser(user.id)"
-                                        :disabled="isSubmitting">
-                                        <Trash2 class="h-4 w-4 text-red-500" />
+                                        :disabled="isSubmitting" class="hover:bg-muted">
+                                        <Trash2 class="h-4 w-4 text-destructive" />
                                     </Button>
                                 </div>
                             </TableCell>

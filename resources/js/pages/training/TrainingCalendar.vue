@@ -19,31 +19,31 @@
 
       <div class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700">Date</label>
-          <input type="date" v-model="form.date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+          <label class="block text-sm font-medium text-foreground">Date</label>
+          <input type="date" v-model="form.date" class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700">Start Time</label>
-          <input type="time" v-model="form.start_time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          <label class="block text-sm font-medium text-foreground">Start Time</label>
+          <input type="time" v-model="form.start_time" class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             step="900">
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700">End Time</label>
-          <input type="time" v-model="form.end_time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          <label class="block text-sm font-medium text-foreground">End Time</label>
+          <input type="time" v-model="form.end_time" class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             step="900">
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700">Max Participants</label>
+          <label class="block text-sm font-medium text-foreground">Max Participants</label>
           <input type="number" v-model="form.max_participants"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700">Category</label>
-          <select v-model="form.category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+          <label class="block text-sm font-medium text-foreground">Category</label>
+          <select v-model="form.category_id" class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
             <option :value="null">Select a category</option>
             <option v-for="category in categories" :key="category.id" :value="category.id">
               {{ category.name }}
@@ -52,9 +52,9 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700">Notes</label>
+          <label class="block text-sm font-medium text-foreground">Notes</label>
           <textarea v-model="form.notes" rows="3"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+            class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"></textarea>
         </div>
       </div>
 
@@ -74,13 +74,13 @@
 
       <div v-if="selectedSession" class="space-y-4">
         <div>
-          <h3 class="font-medium">Date & Time</h3>
-          <p>{{ formatDateTime(selectedSession.start_time) }} - {{ formatTime(selectedSession.end_time) }}</p>
+          <h3 class="font-medium text-foreground">Date & Time</h3>
+          <p class="text-muted-foreground">{{ formatDateTime(selectedSession.start_time) }} - {{ formatTime(selectedSession.end_time) }}</p>
         </div>
 
         <div v-if="selectedSession.category">
-          <h3 class="font-medium">Category</h3>
-          <p class="flex items-center">
+          <h3 class="font-medium text-foreground">Category</h3>
+          <p class="flex items-center text-muted-foreground">
             <span class="inline-block w-3 h-3 rounded-full mr-2"
               :style="{ backgroundColor: selectedSession.category.color }"></span>
             {{ selectedSession.category.name }}
@@ -88,20 +88,20 @@
         </div>
 
         <div>
-          <h3 class="font-medium">Participants ({{ selectedSession.attendance_records?.length || 0 }}/{{
+          <h3 class="font-medium text-foreground">Participants ({{ selectedSession.attendance_records?.length || 0 }}/{{
             selectedSession.max_participants }})</h3>
           <ul class="mt-2 space-y-2">
             <li v-for="record in selectedSession.attendance_records" :key="record.id"
-              class="flex items-center justify-between">
+              class="flex items-center justify-between text-muted-foreground">
               <span>{{ record.user.name }}</span>
-              <span class="text-sm text-gray-600">{{ record.status }}</span>
+              <span class="text-sm">{{ record.status }}</span>
             </li>
           </ul>
         </div>
 
         <div v-if="selectedSession.notes">
-          <h3 class="font-medium">Notes</h3>
-          <p class="text-gray-600">{{ selectedSession.notes }}</p>
+          <h3 class="font-medium text-foreground">Notes</h3>
+          <p class="text-muted-foreground">{{ selectedSession.notes }}</p>
         </div>
 
         <div v-if="canRegister" class="mt-4 flex gap-2">
@@ -269,14 +269,14 @@ const deleteSession = async (id: number) => {
 
 <style scoped>
 .btn-primary {
-  @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700;
+  @apply bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90;
 }
 
 .btn-secondary {
-  @apply bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300;
+  @apply bg-secondary text-secondary-foreground px-4 py-2 rounded-md hover:bg-secondary/80;
 }
 
 .btn-danger {
-  @apply bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700;
+  @apply bg-destructive text-destructive-foreground px-4 py-2 rounded-md hover:bg-destructive/90;
 }
 </style>

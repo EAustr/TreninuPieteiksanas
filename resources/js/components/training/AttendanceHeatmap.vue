@@ -55,24 +55,24 @@ onMounted(() => {
         </CardHeader>
         <CardContent>
             <div v-if="loading" class="flex justify-center items-center h-32">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
             <div v-else class="flex gap-1">
                 <div v-for="(week, weekIndex) in weeks" :key="weekIndex" class="flex flex-col gap-1">
                     <div v-for="(day) in week" :key="day.date" 
                          class="w-3 h-3 rounded-sm"
                          :class="{
-                             'bg-green-500': day.attended,
-                             'bg-gray-200': !day.attended
+                             'bg-green-500 dark:bg-green-400': day.attended,
+                             'bg-muted dark:bg-muted/50': !day.attended
                          }"
                          :title="new Date(day.date).toLocaleDateString() + (day.attended ? ' - Attended' : ' - Not attended')"
                     ></div>
                 </div>
             </div>
-            <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
+            <div class="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
                 <span>Less</span>
-                <div class="w-3 h-3 rounded-sm bg-gray-200"></div>
-                <div class="w-3 h-3 rounded-sm bg-green-500"></div>
+                <div class="w-3 h-3 rounded-sm bg-muted dark:bg-muted/50"></div>
+                <div class="w-3 h-3 rounded-sm bg-green-500 dark:bg-green-400"></div>
                 <span>More</span>
             </div>
         </CardContent>
@@ -83,7 +83,16 @@ onMounted(() => {
 .bg-green-500 {
     background-color: #22c55e;
 }
-.bg-gray-200 {
-    background-color: #e5e7eb;
+
+.dark .bg-green-500 {
+    background-color: #4ade80;
+}
+
+.bg-muted {
+    background-color: hsl(var(--muted));
+}
+
+.dark .bg-muted {
+    background-color: hsl(var(--muted) / 0.5);
 }
 </style> 

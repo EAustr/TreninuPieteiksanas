@@ -91,55 +91,50 @@ onMounted(() => {
 </script>
 
 <template>
-
     <Head title="Edit User" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="max-w-2xl mx-auto">
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-2xl font-semibold mb-6">Edit User</h2>
+        <div class="container mx-auto px-4 py-8">
+            <div class="rounded-lg border bg-card p-6 shadow">
+                <h2 class="text-2xl font-semibold mb-6 text-foreground">Edit User</h2>
 
                 <form @submit.prevent="updateUser" class="space-y-6">
                     <!-- Name -->
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                        <Input id="name" v-model="form.name" type="text" :class="{ 'border-red-500': errors.name }"
+                        <label for="name" class="block text-sm font-medium text-foreground">Name</label>
+                        <Input id="name" v-model="form.name" type="text" :class="{ 'border-destructive': errors.name }"
                             required />
-                        <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
+                        <p v-if="errors.name" class="mt-1 text-sm text-destructive">{{ errors.name }}</p>
                     </div>
 
                     <!-- Email -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <Input id="email" v-model="form.email" type="email" :class="{ 'border-red-500': errors.email }"
+                        <label for="email" class="block text-sm font-medium text-foreground">Email</label>
+                        <Input id="email" v-model="form.email" type="email" :class="{ 'border-destructive': errors.email }"
                             required />
-                        <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
+                        <p v-if="errors.email" class="mt-1 text-sm text-destructive">{{ errors.email }}</p>
                     </div>
 
                     <!-- Role -->
                     <div>
-                        <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                        <label for="role" class="block text-sm font-medium text-foreground">Role</label>
                         <select id="role" v-model="form.role" required
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            :class="{ 'border-red-500': errors.role }">
+                            class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                            :class="{ 'border-destructive': errors.role }">
                             <option value="admin">Admin</option>
                             <option value="trainer">Trainer</option>
                             <option value="athlete">Athlete</option>
                         </select>
-                        <p v-if="errors.role" class="mt-1 text-sm text-red-600">{{ errors.role }}</p>
+                        <p v-if="errors.role" class="mt-1 text-sm text-destructive">{{ errors.role }}</p>
                     </div>
 
                     <!-- General Error -->
-                    <p v-if="errors.general" class="text-sm text-red-600">{{ errors.general }}</p>
+                    <p v-if="errors.general" class="text-sm text-destructive">{{ errors.general }}</p>
 
                     <!-- Submit Button -->
-                    <div class="flex justify-end gap-4">
-                        <Button type="button" variant="outline" @click="router.visit('/users')"
-                            :disabled="isSubmitting">
-                            Cancel
-                        </Button>
+                    <div class="flex justify-end">
                         <Button type="submit" :disabled="isSubmitting">
-                            {{ isSubmitting ? 'Saving...' : 'Save Changes' }}
+                            Update User
                         </Button>
                     </div>
                 </form>

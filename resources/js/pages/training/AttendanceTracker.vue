@@ -100,31 +100,37 @@ onMounted(() => {
         <!-- Summary Stats -->
         <div class="flex gap-8 mb-4">
             <div>
-                <div class="text-lg font-bold">{{ totalSessions }}</div>
-                <div class="text-xs text-gray-500">Total Sessions</div>
+                <div class="text-lg font-bold text-foreground">{{ totalSessions }}</div>
+                <div class="text-xs text-muted-foreground">Total Sessions</div>
             </div>
             <div>
-                <div class="text-lg font-bold">{{ totalParticipants }}</div>
-                <div class="text-xs text-gray-500">Total Participants</div>
+                <div class="text-lg font-bold text-foreground">{{ totalParticipants }}</div>
+                <div class="text-xs text-muted-foreground">Total Participants</div>
             </div>
         </div>
 
         <!-- Tabs -->
         <div class="flex gap-2 mb-4">
             <button @click="tab = 'upcoming'"
-                :class="['px-4 py-2 rounded', tab === 'upcoming' ? 'bg-blue-600 text-white' : 'bg-gray-200']">Upcoming
-                Sessions</button>
+                :class="['px-4 py-2 rounded transition-colors', tab === 'upcoming' 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground']">
+                Upcoming Sessions
+            </button>
             <button @click="tab = 'past'"
-                :class="['px-4 py-2 rounded', tab === 'past' ? 'bg-blue-600 text-white' : 'bg-gray-200']">Past
-                Sessions</button>
+                :class="['px-4 py-2 rounded transition-colors', tab === 'past' 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground']">
+                Past Sessions
+            </button>
         </div>
 
-        <div v-if="loading" class="text-center py-8">
+        <div v-if="loading" class="text-center py-8 text-muted-foreground">
             Loading sessions...
         </div>
 
         <div v-else>
-            <div v-if="(tab === 'upcoming' ? upcomingSessions : pastSessions).length === 0" class="text-center py-8">
+            <div v-if="(tab === 'upcoming' ? upcomingSessions : pastSessions).length === 0" class="text-center py-8 text-muted-foreground">
                 No training sessions found.
             </div>
             <div v-else class="space-y-4">
@@ -137,27 +143,27 @@ onMounted(() => {
                             ({{ new Date(session.start_time).toLocaleTimeString() }} - {{ new
                                 Date(session.end_time).toLocaleTimeString() }})
                         </CardTitle>
-                        <span class="text-xs text-gray-500">{{ session.attendance_records.length }} participants</span>
+                        <span class="text-xs text-muted-foreground">{{ session.attendance_records.length }} participants</span>
                     </CardHeader>
                     <CardContent v-if="expandedSessionId === session.id">
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
-                                    <tr class="border-b">
-                                        <th class="text-left py-2">Participant</th>
-                                        <th class="text-left py-2">Status</th>
-                                        <th class="text-left py-2">Actions</th>
+                                    <tr class="border-b border-border">
+                                        <th class="text-left py-2 text-foreground">Participant</th>
+                                        <th class="text-left py-2 text-foreground">Status</th>
+                                        <th class="text-left py-2 text-foreground">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="record in session.attendance_records" :key="record.id" class="border-b">
-                                        <td class="py-2">{{ record.user.name }}</td>
+                                    <tr v-for="record in session.attendance_records" :key="record.id" class="border-b border-border">
+                                        <td class="py-2 text-foreground">{{ record.user.name }}</td>
                                         <td class="py-2">
                                             <span :class="{
-                                                'text-green-600': record.status === 'present',
-                                                'text-red-600': record.status === 'absent',
-                                                'text-yellow-600': record.status === 'late',
-                                                'text-blue-600': record.status === 'registered'
+                                                'text-green-600 dark:text-green-400': record.status === 'present',
+                                                'text-red-600 dark:text-red-400': record.status === 'absent',
+                                                'text-yellow-600 dark:text-yellow-400': record.status === 'late',
+                                                'text-blue-600 dark:text-blue-400': record.status === 'registered'
                                             }">
                                                 {{ record.status }}
                                             </span>
