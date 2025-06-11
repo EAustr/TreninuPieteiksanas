@@ -33,7 +33,7 @@ const weeks = computed(() => {
             date.setDate(today.getDate() - (i * 7 + (6 - j)));
             week.push({
                 date: date.toISOString().split('T')[0],
-                attended: attendanceData.value.some(record => 
+                attended: attendanceData.value.some(record =>
                     record.date === date.toISOString().split('T')[0] && record.attended
                 )
             });
@@ -59,14 +59,12 @@ onMounted(() => {
             </div>
             <div v-else class="flex gap-1">
                 <div v-for="(week, weekIndex) in weeks" :key="weekIndex" class="flex flex-col gap-1">
-                    <div v-for="(day) in week" :key="day.date" 
-                         class="w-3 h-3 rounded-sm"
-                         :class="{
-                             'bg-green-500 dark:bg-green-400': day.attended,
-                             'bg-muted dark:bg-muted/50': !day.attended
-                         }"
-                         :title="new Date(day.date).toLocaleDateString() + (day.attended ? ' - Attended' : ' - Not attended')"
-                    ></div>
+                    <div v-for="(day) in week" :key="day.date" class="w-3 h-3 rounded-sm" :class="{
+                        'bg-green-500 dark:bg-green-400': day.attended,
+                        'bg-muted dark:bg-muted/50': !day.attended
+                    }"
+                        :title="new Date(day.date).toLocaleDateString() + (day.attended ? ' - Attended' : ' - Not attended')">
+                    </div>
                 </div>
             </div>
             <div class="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
@@ -95,4 +93,4 @@ onMounted(() => {
 .dark .bg-muted {
     background-color: hsl(var(--muted) / 0.5);
 }
-</style> 
+</style>
