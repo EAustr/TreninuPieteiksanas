@@ -76,4 +76,11 @@ class UserController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function trainers()
+    {
+        return User::where('role', 'trainer')
+            ->select(['id', 'name', 'email'])
+            ->get();
+    }
 }

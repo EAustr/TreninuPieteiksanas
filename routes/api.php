@@ -43,6 +43,10 @@ Route::middleware(['web', 'auth:sanctum', 'verified'])->group(function () {
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
     });
 
-    Route::get('/settings/attended-training', [AttendanceRecordController::class, 'attendedTrainings']);
+    // Get all trainers (accessible by admin and trainer roles)
+    Route::middleware(['role:admin|trainer'])->group(function () {
+        Route::get('/trainers', [UserController::class, 'trainers']);
+    });
 
+    Route::get('/settings/attended-training', [AttendanceRecordController::class, 'attendedTrainings']);
 });

@@ -28,6 +28,12 @@ interface TrainingCategory {
     color: string;
 }
 
+interface Trainer {
+    id: number;
+    name: string;
+    email: string;
+}
+
 interface TrainingSession {
     id: number;
     start_time: string;
@@ -36,6 +42,8 @@ interface TrainingSession {
     notes?: string;
     category_id?: number;
     category?: TrainingCategory;
+    trainer_id: number;
+    trainer?: Trainer;
     attendance_records: AttendanceRecord[];
 }
 
@@ -55,13 +63,16 @@ const upcomingSessions = ref<TrainingSession[]>([]);
 const showCreateModal = ref(false);
 const editingSession = ref<TrainingSession | null>(null);
 
+const trainers = ref<Trainer[]>([]);
+
 const form = ref({
     date: '',
     start_time: '',
     end_time: '',
     max_participants: 12,
     notes: '',
-    category_id: null as number | null
+    category_id: null as number | null,
+    trainer_id: null as number | null
 });
 
 const errors = ref({
@@ -93,6 +104,19 @@ const fetchUpcomingSessions = async () => {
         categories.value = response.data.categories;
     } catch (error) {
         console.error('Error fetching upcoming sessions:', error);
+    }
+};
+
+const fetchTrainers = async () => {
+    try {
+        const response = await axios.get('/api/trainers');
+        trainers.value = response.data;
+        // If user is a trainer, set their ID as default
+        if (isTrainer.value && user.value) {
+            form.value.trainer_id = user.value.id;
+        }
+    } catch (error) {
+        console.error('Error fetching trainers:', error);
     }
 };
 
@@ -145,7 +169,8 @@ const editSession = (session: TrainingSession) => {
         end_time: format(endDate, 'HH:mm'),
         max_participants: session.max_participants,
         notes: session.notes || '',
-        category_id: session.category_id || null
+        category_id: session.category_id || null,
+        trainer_id: session.trainer_id
     };
     showCreateModal.value = true;
 };
@@ -226,19 +251,21 @@ const createSession = async () => {
 };
 
 const resetForm = () => {
-    editingSession.value = null;
     form.value = {
         date: '',
         start_time: '',
         end_time: '',
         max_participants: 12,
         notes: '',
-        category_id: null
+        category_id: null,
+        trainer_id: null
     };
+    editingSession.value = null;
 };
 
 onMounted(() => {
     fetchUpcomingSessions();
+    fetchTrainers();
 });
 </script>
 
@@ -417,6 +444,16 @@ onMounted(() => {
                         <option :value="null">Select a category</option>
                         <option v-for="category in categories" :key="category.id" :value="category.id">
                             {{ category.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div v-if="isAdmin">
+                    <label class="block text-sm font-medium text-foreground">Trainer</label>
+                    <select v-model="form.trainer_id" required class="mt-1 block w-full rounded-md border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                        <option :value="null">Select a trainer</option>
+                        <option v-for="trainer in trainers" :key="trainer.id" :value="trainer.id">
+                            {{ trainer.name }}
                         </option>
                     </select>
                 </div>
