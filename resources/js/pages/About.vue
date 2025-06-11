@@ -29,14 +29,14 @@
 /// <reference types="google.maps" />
 import { onMounted } from 'vue';
 
-declare global{
+declare global {
     interface Window {
         initMap: () => (void);
     }
 }
 
 onMounted(() => {
-    const apiKey = 'AIzaSyDzukRfn_ZEemIGMI3LjSlrsGbmhMEK96s';
+    const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
     const scriptId = 'google-maps-script';
     if (!document.getElementById(scriptId)) {
         const script = document.createElement('script');
