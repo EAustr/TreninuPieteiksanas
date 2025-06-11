@@ -22,12 +22,14 @@
 - Lomu bāzēta piekļuves kontrole – tikai autorizēti lietotāji var veidot un rediģēt treniņus.
 
 ## Sistēmas palaišanas vadlīnijas
-- git clone <repo-url>
-- cd <project-folder>
-- composer install
-- npm install 
-- php artisan migrate
-- composer run dev
+```
+git clone <repo-url>
+cd <project-folder>
+composer install
+npm install 
+php artisan migrate
+composer run dev
+```
 
 ## Sistēmas prasības (Lietas kurām jābūt ieinstelētām lai sistēmu varētu palaist uz datora)
 - PHP 8.1 vai jaunāks
